@@ -26,11 +26,11 @@ const Home: React.FC = () => {
   const [barcodePreview, setBarcodePreview] = useState<string | null>(null);
 
   const barcodeRef = useRef<HTMLDivElement | null>(null);
+  const cardRef = useRef<HTMLDivElement | null>(null);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setBarcodeGenerated(false); // Reset barcode state when inputs change
-    setBarcodePreview(null);
   };
 
   const generateBarcode = useCallback(async () => {
@@ -68,12 +68,25 @@ const Home: React.FC = () => {
     }
   }, [formData]);
 
-  const downloadBarcode = () => {
-    if (barcodePreview) {
-      const link = document.createElement("a");
-      link.download = "barcode.png";
-      link.href = barcodePreview;
-      link.click();
+  const downloadBarcode = async () => {
+    if (cardRef.current) {
+      try {
+        const cardImage = await toPng(cardRef.current, {
+          cacheBust: true, // Avoid caching issues
+          skipFonts: true, // Skip loading fonts if causing issues
+          filter: (node) => {
+            // Filter out nodes that might cause security issues
+            return node.tagName !== "SCRIPT";
+          },
+        });
+        const link = document.createElement("a");
+        link.download = "barcode_card.png";
+        link.href = cardImage;
+        link.click();
+      } catch (error) {
+        console.error("Error downloading the card image:", error);
+        alert("Failed to download the barcode card. Please try again.");
+      }
     }
   };
 
@@ -85,7 +98,10 @@ const Home: React.FC = () => {
       price: "",
     });
     setBarcodeGenerated(false);
-    setBarcodePreview(null);
+    // Clear the barcode canvas
+    if (barcodeRef.current) {
+      barcodeRef.current.innerHTML = "";
+    }
   };
 
   useEffect(() => {
@@ -94,7 +110,7 @@ const Home: React.FC = () => {
         format: "CODE128",
         width: 2,
         height: 40,
-        displayValue: true,
+        displayValue: false,
       });
     }
   }, [barcodeGenerated, formData.barcode]);
@@ -169,14 +185,17 @@ const Home: React.FC = () => {
 
       {/* Preview Section */}
       <div className="flex items-center justify-center bg-white shadow-md rounded-lg p-4">
-        <Card className="w-[250px] h-[130px] border border-gray-300 p-2 flex flex-col items-center justify-between">
+        <Card
+          className="w-[250px] h-[130px] border border-gray-300 p-2 flex flex-col items-center justify-center"
+          ref={cardRef}
+        >
           {/* Product Name */}
           <h3 className="text-xs font-semibold text-left px-2 tracking-wide text-wrap w-full">
             {formData.productName || "Product Name"}
           </h3>
 
           {/* Product ID */}
-          <p className="text-xs font-bold text-center text-wrap w-full">
+          <p className="text-xs font-bold text-center text-wrap w-full mt-1 -mb-1">
             {formData.productId || "Product ID"}
           </p>
 
@@ -186,13 +205,13 @@ const Home: React.FC = () => {
               ref={barcodeRef}
               className="w-[150px] h-[40px] bg-white"
             ></canvas>
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-black font-semibold tracking-wide -mt-1">
               {formData.barcode || "Barcode"}
             </p>
           </div>
 
           {/* MRP Price */}
-          <p className="text-sm font-semibold text-gray-800">
+          <p className="text-sm font-semibold text-gray-800 mt-1">
             MRP: ₹{formData.price || "0.00"}
           </p>
         </Card>
