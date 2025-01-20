@@ -189,7 +189,7 @@ const Home: React.FC = () => {
           ref={cardRef}
         >
           {/* Product Name */}
-          <h3 className="text-xs font-semibold text-left px-2 tracking-wide text-wrap w-full">
+          <h3 className="text-xs font-semibold text-center px-2 tracking-wide text-wrap w-full">
             {formData.productName || "Product Name"}
           </h3>
 
