@@ -4,7 +4,7 @@ import React, { useState, useCallback, useRef, useEffect } from "react";
 import JsBarcode from "jsbarcode";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { toPng } from "html-to-image";
 
 interface FormData {
@@ -23,9 +23,8 @@ const Home: React.FC = () => {
   });
 
   const [barcodeGenerated, setBarcodeGenerated] = useState(false);
-  const [barcodePreview, setBarcodePreview] = useState<string | null>(null);
 
-  const barcodeRef = useRef<HTMLDivElement | null>(null);
+  const barcodeRef = useRef<HTMLCanvasElement | null>(null);
   const cardRef = useRef<HTMLDivElement | null>(null);
 
   const handleInputChange = (field: keyof FormData, value: string) => {
