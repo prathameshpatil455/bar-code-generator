@@ -45,8 +45,8 @@ const Home: React.FC = () => {
         barcodeRef.current.innerHTML = "";
         JsBarcode(barcodeRef.current, barcode, {
           format: "CODE128",
-          width: 2,
-          height: 40,
+          width: 3,
+          height: 80,
           displayValue: false,
         });
         setBarcodeGenerated(true);
@@ -64,6 +64,7 @@ const Home: React.FC = () => {
           cacheBust: true,
           skipFonts: true,
           filter: (node) => node.tagName !== "SCRIPT",
+          pixelRatio: 40,
         });
         const link = document.createElement("a");
         link.download = "barcode_card.png";
@@ -93,8 +94,8 @@ const Home: React.FC = () => {
     if (barcodeGenerated && barcodeRef.current) {
       JsBarcode(barcodeRef.current, formData.barcode, {
         format: "CODE128",
-        width: 2,
-        height: 40,
+        width: 3,
+        height: 80,
         displayValue: false,
       });
     }
@@ -177,19 +178,19 @@ const Home: React.FC = () => {
           <h3 className="text-sm font-semibold text-center px-2 tracking-wide">
             {formData.productName || "Product Name"}
           </h3>
-          <p className="text-xs font-bold text-center mt-1 -mb-1">
+          <p className="text-base font-bold text-center mt-1 -mb-1 tracking-wide">
             {formData.productId || "Product ID"}
           </p>
           <div className="flex flex-col items-center">
             <canvas
               ref={barcodeRef}
-              className="w-[150px] h-[40px] bg-white"
+              className="w-[250px] h-[60px] bg-white"
             ></canvas>
-            <p className="text-xs font-semibold tracking-wide -mt-1">
+            <p className="text-sm font-semibold tracking-wide -mt-1">
               {formData.barcode || "Barcode"}
             </p>
           </div>
-          <p className="text-sm font-semibold text-gray-800 mt-1">
+          <p className="text-base font-semibold  mt-1">
             MRP: ₹{formData.price || "0.00"}
           </p>
         </Card>
