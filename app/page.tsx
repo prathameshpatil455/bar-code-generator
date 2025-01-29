@@ -46,7 +46,7 @@ const Home: React.FC = () => {
         JsBarcode(barcodeRef.current, barcode, {
           format: "CODE128",
           width: 3,
-          height: 80,
+          height: 40,
           displayValue: false,
         });
         setBarcodeGenerated(true);
@@ -165,6 +165,13 @@ const Home: React.FC = () => {
             >
               Generate New Barcode
             </Button>
+            {/* 🔹 New "Update Barcode" Button */}
+            {/* <Button
+              className="bg-yellow-500 text-white hover:bg-yellow-600 flex-1"
+              onClick={generateBarcode}
+            >
+              Update Barcode
+            </Button> */}
           </div>
         )}
       </div>
@@ -175,7 +182,7 @@ const Home: React.FC = () => {
           className="w-full max-w-xs border border-gray-300 p-2 flex flex-col items-center"
           ref={cardRef}
         >
-          <h3 className="text-sm font-semibold text-center px-2 tracking-wide">
+          <h3 className="text-base font-semibold text-center px-2 tracking-wide">
             {formData.productName || "Product Name"}
           </h3>
           <p className="text-base font-bold text-center mt-1 -mb-1 tracking-wide">
@@ -186,12 +193,16 @@ const Home: React.FC = () => {
               ref={barcodeRef}
               className="w-[250px] h-[60px] bg-white"
             ></canvas>
-            <p className="text-sm font-semibold tracking-wide -mt-1">
+            <p className="text-base font-semibold tracking-wide -mt-1">
               {formData.barcode || "Barcode"}
             </p>
           </div>
-          <p className="text-base font-semibold  mt-1">
-            MRP: ₹{formData.price || "0.00"}
+          <p className="text-lg font-semibold  mt-1">
+            MRP: ₹
+            {new Intl.NumberFormat("en-IN", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(parseFloat(formData.price || "0"))}{" "}
           </p>
         </Card>
       </div>
