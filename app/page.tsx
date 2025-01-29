@@ -198,7 +198,7 @@ const Home: React.FC = () => {
             </p>
           </div>
           <p className="text-lg font-semibold  mt-1">
-            MRP: ₹
+            MRP:{" "}
             {new Intl.NumberFormat("en-IN", {
               minimumFractionDigits: 2,
               maximumFractionDigits: 2,
